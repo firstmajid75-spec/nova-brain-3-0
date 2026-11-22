@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#071018">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<link rel="manifest" href="manifest.webmanifest">
+
+<meta name="description" content="NOVA BRAIN 3.0 — personal AI command interface">
+<title>NOVA BRAIN 3.0</title>
+<style>
+:root{--bg:#071018;--panel:#0d1b27;--panel2:#102536;--line:#1b4355;--cyan:#50e5ed;--gold:#d8b36a;--muted:#8ba6b5;--white:#eaf7fa;--green:#71e3ad}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at 50% -20%,#12384b 0,#071018 55%);color:var(--white);font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;min-height:100vh}
+header{position:sticky;top:0;z-index:5;background:#071018ed;border-bottom:1px solid var(--line);padding:13px 16px;padding-top:max(13px,env(safe-area-inset-top));backdrop-filter:blur(12px)}
+.brand{display:flex;align-items:center;gap:11px}.sigil{width:42px;height:42px;border:1px solid var(--cyan);border-radius:12px;display:grid;place-items:center;color:var(--cyan);font-weight:900;box-shadow:0 0 18px #50e5ed33;letter-spacing:-2px}
+h1{font-size:16px;letter-spacing:2px;margin:0}.sub{font-size:9px;color:var(--muted);letter-spacing:2px;margin-top:4px}.status{margin-left:auto;font-size:9px;color:var(--green);border:1px solid #28664f;border-radius:20px;padding:6px 8px;white-space:nowrap}
+main{max-width:850px;margin:auto;padding:17px 13px 105px}.hero{border:1px solid var(--line);border-radius:20px;padding:21px 17px;background:linear-gradient(145deg,#102b3b,#0a1721 72%);position:relative;overflow:hidden}
+.hero:after{content:"";position:absolute;width:180px;height:180px;border:1px solid #50e5ed22;border-radius:50%;right:-75px;top:-75px;box-shadow:0 0 0 18px #50e5ed09,0 0 0 38px #50e5ed06;pointer-events:none}
+.eyebrow{font-size:9px;letter-spacing:2px;color:var(--gold)}.hero h2{font-size:25px;line-height:1.14;margin:10px 0}.hero p{color:#a8c1cd;font-size:12px;line-height:1.65;max-width:520px}.core{display:flex;align-items:center;gap:8px;color:var(--cyan);font-size:10px;letter-spacing:1.4px}.dot{width:7px;height:7px;background:var(--green);border-radius:50%;box-shadow:0 0 10px var(--green)}
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-top:13px}.tile,.panel{border:1px solid var(--line);border-radius:15px;background:linear-gradient(150deg,#0e202d,#0a1721);padding:14px}.tile{min-height:105px;text-align:left;color:var(--white);cursor:pointer}.tile:active,.nav button:active{transform:scale(.98)}.tile .ico{font-size:21px;color:var(--cyan)}.tile h3{font-size:13px;margin:8px 0 3px}.tile p{font-size:10px;color:var(--muted);margin:0;line-height:1.45}
+.section{display:none;margin-top:14px}.section.active{display:block}.section h2{font-size:18px;margin:0 0 5px}.lead{font-size:11px;color:var(--muted);line-height:1.6;margin:0 0 13px}
+.panel{margin-top:10px}.panel h3{font-size:13px;margin:0 0 8px}.muted{font-size:11px;color:var(--muted);line-height:1.6}
+input,textarea{width:100%;background:#06121b;border:1px solid #285064;color:var(--white);border-radius:11px;padding:12px;font:inherit;font-size:13px;outline:none}textarea{min-height:90px;resize:vertical}input:focus,textarea:focus{border-color:var(--cyan)}
+button.action{border:1px solid #3a8d9a;background:#103444;color:var(--cyan);border-radius:10px;padding:10px 13px;font-weight:700;font-size:11px;cursor:pointer;margin-top:8px}button.secondary{border-color:var(--line);background:#0b1b27;color:#c2d7df}
+.row{display:flex;gap:8px;align-items:center}.row>*{flex:1}.chatlog{display:flex;flex-direction:column;gap:8px;max-height:310px;overflow:auto;margin:12px 0}.bubble{padding:10px 12px;border-radius:12px;background:#102536;border:1px solid var(--line);font-size:12px;line-height:1.5;white-space:pre-wrap}.bubble.user{background:#10313a;border-color:#28616a}.tag{display:inline-block;border:1px solid var(--line);color:var(--gold);border-radius:20px;padding:5px 8px;font-size:9px;margin:3px 4px 3px 0}
+.note{font-size:10px;color:#819eac;line-height:1.55}.saved{border-bottom:1px solid var(--line);padding:9px 0;font-size:12px;white-space:pre-wrap}.nav{position:fixed;bottom:0;left:0;right:0;z-index:6;display:flex;justify-content:space-around;background:#071018f2;border-top:1px solid var(--line);padding:8px 4px calc(8px + env(safe-area-inset-bottom));backdrop-filter:blur(12px)}.nav button{border:0;background:transparent;color:#8ba6b5;font-size:9px;padding:5px 3px;min-width:55px;cursor:pointer}.nav button span{display:block;font-size:17px;margin-bottom:3px}.nav button.active{color:var(--cyan)}.footer{text-align:center;color:#607d8b;font-size:9px;margin-top:20px;letter-spacing:1px}
+@media(min-width:650px){.grid{grid-template-columns:repeat(3,minmax(0,1fr))}.hero{padding:28px}.hero h2{font-size:31px}}
+</style>
+</head>
+<body>
+<header><div class="brand"><div class="sigil">N//</div><div><h1>NOVA BRAIN 3.0</h1><div class="sub">PERSONAL INTELLIGENCE PLATFORM</div></div><div class="status">● LOCAL MODE</div></div></header>
+<main>
+<div class="hero">
+ <div class="eyebrow">ÌLÚNOVA • HUMAN-CENTRED TECHNOLOGY</div>
+ <h2>Your ideas.<br>Your intelligence. Your command.</h2>
+ <p>A lightweight mobile command interface for research, invention, knowledge and project planning. Designed to run in a phone browser and grow into the wider NOVA ecosystem.</p>
+ <div class="core"><i class="dot"></i> INTERFACE READY <span style="color:var(--muted)">| LOCAL DEMO</span></div>
+</div>
+<div class="grid" id="homeTiles">
+ <button class="tile" onclick="show('brain')"><div class="ico">◉</div><h3>AI BRAIN</h3><p>Chat workspace and thinking console</p></button>
+ <button class="tile" onclick="show('projects')"><div class="ico">⌘</div><h3>PROJECTS</h3><p>Track NOVA and ILÚNOVA initiatives</p></button>
+ <button class="tile" onclick="show('knowledge')"><div class="ico">▤</div><h3>KNOWLEDGE BASE</h3><p>Save research notes on this device</p></button>
+ <button class="tile" onclick="show('engineering')"><div class="ico">⚙</div><h3>ENGINEERING LAB</h3><p>Prototype concepts and build records</p></button>
+ <button class="tile" onclick="show('bio')"><div class="ico">✧</div><h3>BIONATURE</h3><p>Plant, biology and materials research</p></button>
+ <button class="tile" onclick="show('command')"><div class="ico">⌖</div><h3>COMMAND CENTRE</h3><p>System status and quick actions</p></button>
+</div>
+
+<section class="section" id="brain"><h2>AI Brain</h2><p class="lead">A mobile thinking workspace. This downloadable build is a local interface prototype; it does not yet connect to a live AI service.</p>
+ <div class="panel"><div class="core"><i class="dot"></i> CONVERSATION CONSOLE</div><div class="chatlog" id="chatlog"><div class="bubble">NOVA interface initialized. Write an idea, question or task below. Your entries stay in this page session unless you save them to Knowledge Base.</div></div>
+ <textarea id="prompt" placeholder="Enter a question, research idea or instruction..."></textarea><div class="row"><button class="action" onclick="sendPrompt()">Add to console</button><button class="action secondary" onclick="voiceInput()">🎙 Voice input</button></div><p class="note" id="voiceStatus">Voice input depends on browser support and microphone permission.</p></div>
+</section>
+
+<section class="section" id="projects"><h2>Project Control</h2><p class="lead">Starter project register for the NOVA ecosystem. Select a project to add a working note.</p>
+ <div class="panel"><h3>Active project areas</h3><div><span class="tag">NOVA BRAIN 3.0</span><span class="tag">AI LABORATORY</span><span class="tag">ILÚNOVA</span><span class="tag">NEXKID AI</span><span class="tag">NOVA FAMILY LINK</span></div><p class="muted">Use the note box to record the next milestone, design decision or task for any project.</p><textarea id="projectNote" placeholder="Project name + next milestone..."></textarea><button class="action" onclick="saveText('projectNote','Project note')">Save project note</button></div>
+</section>
+
+<section class="section" id="knowledge"><h2>Knowledge Base</h2><p class="lead">Save notes locally in this browser on this device. Clearing browser data may erase them.</p>
+ <div class="panel"><h3>New knowledge entry</h3><input id="noteTitle" placeholder="Entry title"><textarea id="noteBody" placeholder="Research finding, source, idea or observation..."></textarea><button class="action" onclick="saveKnowledge()">Save to this device</button></div>
+ <div class="panel"><h3>Saved entries</h3><div id="savedNotes" class="muted">No saved notes yet.</div><button class="action secondary" onclick="exportNotes()">Export notes (.json)</button></div>
+</section>
+
+<section class="section" id="engineering"><h2>Engineering Lab</h2><p class="lead">Capture concepts before moving into drawings, calculations and physical testing.</p>
+ <div class="panel"><h3>Prototype record</h3><input id="engName" placeholder="Prototype / invention name"><textarea id="engDesc" placeholder="Purpose, components, constraints, risks and next experiment..."></textarea><button class="action" onclick="saveEngineering()">Save prototype record</button></div>
+ <div class="panel"><h3>Build discipline</h3><p class="muted">1. Define the problem. 2. Record assumptions. 3. Sketch the system. 4. Check safety. 5. Test the smallest affordable prototype. 6. Record results.</p></div>
+</section>
+
+<section class="section" id="bio"><h2>BioNature</h2><p class="lead">Research workspace for plants, biology, agriculture and natural materials.</p>
+ <div class="panel"><h3>Research log</h3><input id="bioTopic" placeholder="Plant, organism or material"><textarea id="bioBody" placeholder="Question, known evidence, source and proposed safe observation..."></textarea><button class="action" onclick="saveBio()">Save research log</button><p class="note">Keep evidence separate from hypotheses. Do not test unverified remedies on people or animals.</p></div>
+</section>
+
+<section class="section" id="command"><h2>Command Centre</h2><p class="lead">Quick status and local data controls.</p>
+ <div class="panel"><h3>Platform status</h3><p class="muted">Interface: NOVA BRAIN 3.0<br>Build: Android-friendly single HTML file<br>Mode: Local browser prototype<br>Cloud AI: Not connected<br>Local notes: Stored in browser storage</p><button class="action secondary" onclick="show('home')">Return to home</button></div>
+ <div class="panel"><h3>Data management</h3><p class="muted">Export saved notes before clearing browser storage or moving to another device.</p><button class="action" onclick="exportNotes()">Export local data</button><button class="action secondary" onclick="clearNotes()">Clear saved notes</button></div>
+</section>
+<div class="footer">NOVA BRAIN 3.0 • BUILD WITH PURPOSE • PROTECT HUMANITY</div>
+</main>
+<nav class="nav">
+ <button class="active" data-page="home" onclick="show('home')"><span>⌂</span>Home</button>
+ <button data-page="brain" onclick="show('brain')"><span>◉</span>Brain</button>
+ <button data-page="projects" onclick="show('projects')"><span>⌘</span>Projects</button>
+ <button data-page="knowledge" onclick="show('knowledge')"><span>▤</span>Knowledge</button>
+ <button data-page="command" onclick="show('command')"><span>⌖</span>Command</button>
+</nav>
+<script>
+const pages=['brain','projects','knowledge','engineering','bio','command'];
+function show(id){document.getElementById('homeTiles').style.display=id==='home'?'grid':'none';pages.forEach(p=>document.getElementById(p).classList.toggle('active',p===id));document.querySelectorAll('.nav button').forEach(b=>b.classList.toggle('active',b.dataset.page===id));window.scrollTo({top:0,behavior:'smooth'});if(id==='knowledge')renderNotes()}
+function sendPrompt(){let v=document.getElementById('prompt').value.trim();if(!v)return;let b=document.createElement('div');b.className='bubble user';b.textContent=v;document.getElementById('chatlog').appendChild(b);let r=document.createElement('div');r.className='bubble';r.textContent='Captured in the local demo console. A live NOVA AI response requires a secure AI backend connection, which is not included in this offline interface build.';document.getElementById('chatlog').appendChild(r);document.getElementById('prompt').value='';document.getElementById('chatlog').scrollTop=99999}
+function voiceInput(){let S=window.SpeechRecognition||window.webkitSpeechRecognition;if(!S){document.getElementById('voiceStatus').textContent='Speech recognition is not supported in this browser. You can type instead.';return}let rec=new S();rec.lang='en-US';rec.onresult=e=>document.getElementById('prompt').value=e.results[0][0].transcript;rec.onerror=()=>document.getElementById('voiceStatus').textContent='Microphone unavailable or permission denied.';rec.start();document.getElementById('voiceStatus').textContent='Listening…'}
+function getNotes(){try{return JSON.parse(localStorage.getItem('novaBrain30Notes')||'[]')}catch(e){return []}}
+function putNote(title,body,type){let a=getNotes();a.unshift({title,body,type,date:new Date().toLocaleString()});localStorage.setItem('novaBrain30Notes',JSON.stringify(a));renderNotes();alert('Saved on this device.')}
+function saveKnowledge(){let t=document.getElementById('noteTitle').value.trim(),b=document.getElementById('noteBody').value.trim();if(!t||!b){alert('Add a title and note first.');return}putNote(t,b,'Knowledge');document.getElementById('noteTitle').value='';document.getElementById('noteBody').value=''}
+function saveText(id,type){let v=document.getElementById(id).value.trim();if(!v){alert('Enter a note first.');return}putNote(type,v,type);document.getElementById(id).value=''}
+function saveEngineering(){let t=document.getElementById('engName').value.trim(),b=document.getElementById('engDesc').value.trim();if(!t||!b){alert('Add a prototype name and description.');return}putNote(t,b,'Engineering');document.getElementById('engName').value='';document.getElementById('engDesc').value=''}
+function saveBio(){let t=document.getElementById('bioTopic').value.trim(),b=document.getElementById('bioBody').value.trim();if(!t||!b){alert('Add a research topic and details.');return}putNote(t,b,'BioNature');document.getElementById('bioTopic').value='';document.getElementById('bioBody').value=''}
+function renderNotes(){let a=getNotes(),el=document.getElementById('savedNotes');el.innerHTML='';if(!a.length){el.textContent='No saved notes yet.';return}a.forEach(n=>{let d=document.createElement('div');d.className='saved';let strong=document.createElement('strong');strong.textContent=n.title+' · '+n.type;let small=document.createElement('div');small.className='note';small.textContent=n.date;let p=document.createElement('div');p.textContent=n.body;d.append(strong,small,p);el.appendChild(d)})}
+function exportNotes(){let blob=new Blob([JSON.stringify({app:'NOVA BRAIN 3.0',exported:new Date().toISOString(),notes:getNotes()},null,2)],{type:'application/json'});let a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='nova-brain-3-notes.json';a.click();URL.revokeObjectURL(a.href)}
+function clearNotes(){if(confirm('Delete all NOVA notes saved in this browser? Export first if needed.')){localStorage.removeItem('novaBrain30Notes');renderNotes()}}
+</script>
+<script>
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", () => {
+    navigator.serviceWorker.register("./sw.js").catch(() => {});
+  });
+}
+</script>
+</body></html>

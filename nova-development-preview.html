@@ -1,0 +1,507 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#07111f">
+<title>NOVA BRAIN 3.0 | Development Preview</title>
+<style>
+:root {
+  --bg:#07111f;
+  --panel:#102238;
+  --gold:#e8ba64;
+  --cyan:#51e5e0;
+  --text:#edf5ff;
+  --muted:#9baec4;
+}
+* {box-sizing:border-box}
+body {
+  margin:0;
+  background:var(--bg);
+  color:var(--text);
+  font-family:Arial,sans-serif;
+}
+header {
+  padding:22px 16px;
+  text-align:center;
+  background:linear-gradient(135deg,#142c43,#07111f);
+  border-bottom:2px solid var(--gold);
+}
+h1 {color:var(--gold);margin:0;letter-spacing:3px}
+h2 {font-size:19px;color:var(--gold)}
+small,.muted {color:var(--muted)}
+main {max-width:900px;margin:auto;padding:14px}
+.panel {
+  background:var(--panel);
+  border:1px solid #29445b;
+  border-radius:13px;
+  padding:17px;
+  margin:14px 0;
+}
+button,input,textarea,select {
+  font:inherit;
+  border-radius:8px;
+  padding:12px;
+}
+input,textarea,select {
+  width:100%;
+  margin:7px 0;
+  background:#071625;
+  color:white;
+  border:1px solid #496078;
+}
+button {
+  background:var(--gold);
+  color:#091320;
+  border:0;
+  font-weight:bold;
+  cursor:pointer;
+  margin:5px 4px 5px 0;
+}
+button.secondary {
+  background:#25415b;
+  color:white;
+}
+button:disabled {opacity:.5;cursor:not-allowed}
+nav {
+  display:flex;
+  overflow-x:auto;
+  padding:10px;
+  gap:7px;
+}
+nav button {white-space:nowrap}
+section {display:none}
+section.active {display:block}
+.item {
+  border:1px solid #34536a;
+  border-radius:9px;
+  padding:12px;
+  margin:9px 0;
+}
+.status {color:var(--cyan)}
+.warning {color:#ffca84}
+pre {
+  white-space:pre-wrap;
+  overflow-wrap:anywhere;
+  line-height:1.5;
+}
+footer {
+  text-align:center;
+  color:var(--muted);
+  padding:25px;
+}
+</style>
+</head>
+<body>
+
+<header>
+  <h1>NOVA BRAIN 3.0</h1>
+  <p>FOUNDER COMMAND CENTRE</p>
+  <small>Secure Development Preview • Local Prototype</small>
+</header>
+
+<nav aria-label="NOVA navigation">
+  <button onclick="show('home')">Home</button>
+  <button onclick="show('brain')">AI Brain</button>
+  <button onclick="show('divisions')">Divisions</button>
+  <button onclick="show('sentinel')">Sentinel</button>
+  <button onclick="show('approvals')">Approvals</button>
+  <button onclick="show('projects')">Projects</button>
+</nav>
+
+<main>
+
+<section id="home" class="active">
+  <div class="panel">
+    <h2>NOVA Command Centre</h2>
+    <p class="status">● Local interface operational</p>
+    <p>Welcome, Founder.</p>
+    <p>NOVA is being developed as a human-led,
+    hybrid AI research and innovation platform.</p>
+    <p class="warning">
+      This preview does not authenticate users
+      or grant external system permissions.
+    </p>
+  </div>
+
+  <div class="panel">
+    <h2>Core Systems</h2>
+    <div class="item">NOVA AI Brain — Local commands</div>
+    <div class="item">NOVA Division Creator — Approval required</div>
+    <div class="item">NOVA SENTINEL — Policy preview</div>
+    <div class="item">NOVA Projects — Local records</div>
+    <div class="item">NEXKID AI — Planned integration</div>
+    <div class="item">NOVA Family Link — Planned integration</div>
+  </div>
+</section>
+
+<section id="brain">
+  <div class="panel">
+    <h2>NOVA AI Brain</h2>
+    <p class="muted">
+      Offline command prototype.
+      No external AI service is connected.
+    </p>
+
+    <textarea id="command"
+      rows="4"
+      placeholder="Enter a NOVA command"></textarea>
+
+    <button onclick="runCommand()">Execute Command</button>
+
+    <div class="item">
+      <strong>NOVA Response</strong>
+      <pre id="response" aria-live="polite">
+Awaiting Founder command.
+      </pre>
+    </div>
+  </div>
+</section>
+
+<section id="divisions">
+  <div class="panel">
+    <h2>NOVA Division Creator</h2>
+    <p>Create proposed research and innovation divisions.</p>
+
+    <input id="divisionName"
+      maxlength="80"
+      placeholder="Division name">
+
+    <textarea id="divisionPurpose"
+      maxlength="500"
+      placeholder="Division purpose"></textarea>
+
+    <button onclick="proposeDivision()">
+      Propose Division
+    </button>
+
+    <h2>Division Registry</h2>
+    <div id="divisionList"></div>
+  </div>
+</section>
+
+<section id="sentinel">
+  <div class="panel">
+    <h2>NOVA SENTINEL</h2>
+    <p class="status">● Policy demonstration active</p>
+
+    <div class="item">
+      Human authority: Founder approval required
+    </div>
+    <div class="item">
+      External actions: Not implemented
+    </div>
+    <div class="item">
+      Financial transactions: Disabled
+    </div>
+    <div class="item">
+      Secret access: Not implemented
+    </div>
+    <div class="item">
+      Autonomous agents: Disabled
+    </div>
+    <div class="item">
+      Child and family data: Not collected
+    </div>
+
+    <p class="warning">
+      SENTINEL is currently an interface and
+      local approval demonstration, not an
+      independently verified security system.
+    </p>
+  </div>
+</section>
+
+<section id="approvals">
+  <div class="panel">
+    <h2>Founder Approval Centre</h2>
+    <p>Review proposed divisions before local activation.</p>
+    <div id="approvalList"></div>
+  </div>
+</section>
+
+<section id="projects">
+  <div class="panel">
+    <h2>NOVA Project Registry</h2>
+    <input id="projectName"
+      maxlength="100"
+      placeholder="Project name">
+
+    <button onclick="addProject()">Add Project</button>
+    <div id="projectList"></div>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  NOVA BRAIN 3.0<br>
+  Human-Led • AI-Assisted • Secure by Design<br>
+  Development Branch Preview
+</footer>
+
+<script>
+"use strict";
+
+const STORAGE_KEY = "nova_brain_3_preview_v1";
+
+function emptyData() {
+  return {
+    divisions: [],
+    projects: []
+  };
+}
+
+function loadData() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (!raw) return emptyData();
+
+    const saved = JSON.parse(raw);
+
+    return {
+      divisions: Array.isArray(saved.divisions)
+        ? saved.divisions.filter(validDivision)
+        : [],
+      projects: Array.isArray(saved.projects)
+        ? saved.projects.filter(
+            p => p && typeof p.name === "string"
+          )
+        : []
+    };
+  } catch {
+    return emptyData();
+  }
+}
+
+function validDivision(d) {
+  return d &&
+    typeof d.id === "string" &&
+    typeof d.name === "string" &&
+    typeof d.purpose === "string" &&
+    ["pending","active","rejected"].includes(d.status);
+}
+
+let data = loadData();
+
+function save() {
+  try {
+    localStorage.setItem(
+      STORAGE_KEY,
+      JSON.stringify(data)
+    );
+    return true;
+  } catch {
+    alert("Local storage unavailable. Changes may not persist.");
+    return false;
+  }
+}
+
+function show(id) {
+  document.querySelectorAll("main section")
+    .forEach(section => {
+      section.classList.toggle(
+        "active",
+        section.id === id
+      );
+    });
+}
+
+function makeItem(title, detail) {
+  const item = document.createElement("div");
+  item.className = "item";
+
+  const heading = document.createElement("strong");
+  heading.textContent = title;
+
+  const description = document.createElement("p");
+  description.textContent = detail;
+
+  item.append(heading, description);
+  return item;
+}
+
+function makeButton(label, handler) {
+  const button = document.createElement("button");
+  button.textContent = label;
+  button.addEventListener("click", handler);
+  return button;
+}
+
+function proposeDivision() {
+  const name = document.getElementById("divisionName")
+    .value.trim();
+  const purpose = document.getElementById("divisionPurpose")
+    .value.trim();
+
+  if (!name || !purpose) {
+    alert("Enter a division name and purpose.");
+    return;
+  }
+
+  if (name.length > 80 || purpose.length > 500) {
+    alert("Division information is too long.");
+    return;
+  }
+
+  if (data.divisions.some(
+    d => d.name.toLowerCase() === name.toLowerCase()
+  )) {
+    alert("A division with this name already exists.");
+    return;
+  }
+
+  data.divisions.push({
+    id: crypto.randomUUID(),
+    name,
+    purpose,
+    status:"pending"
+  });
+
+  save();
+
+  document.getElementById("divisionName").value = "";
+  document.getElementById("divisionPurpose").value = "";
+
+  render();
+  alert("Division proposal submitted for Founder approval.");
+}
+
+function decideDivision(id, decision) {
+  const division = data.divisions.find(d => d.id === id);
+  if (!division || division.status !== "pending") return;
+
+  const action = decision === "active"
+    ? "approve local activation"
+    : "reject";
+
+  if (!confirm("Founder: " + action + " this division?")) {
+    return;
+  }
+
+  division.status = decision;
+  save();
+  render();
+}
+
+function addProject() {
+  const input = document.getElementById("projectName");
+  const name = input.value.trim();
+
+  if (!name || name.length > 100) {
+    alert("Enter a valid project name.");
+    return;
+  }
+
+  data.projects.push({
+    id:crypto.randomUUID(),
+    name
+  });
+
+  save();
+  input.value = "";
+  render();
+}
+
+function runCommand() {
+  const command = document.getElementById("command")
+    .value.trim();
+
+  const output = document.getElementById("response");
+
+  if (!command) {
+    output.textContent = "Please enter a command.";
+    return;
+  }
+
+  const lower = command.toLowerCase();
+
+  if (lower === "show divisions") {
+    output.textContent = data.divisions.length
+      ? data.divisions.map(d =>
+          d.name + " — " + d.status
+        ).join("\n")
+      : "No divisions registered.";
+
+  } else if (lower === "show projects") {
+    output.textContent = data.projects.length
+      ? data.projects.map(p => p.name).join("\n")
+      : "No projects registered.";
+
+  } else if (lower === "sentinel status") {
+    output.textContent =
+      "SENTINEL policy preview active.\n" +
+      "External actions disabled.\n" +
+      "No backend enforcement verified.\n" +
+      "Founder approval required for local division activation.";
+
+  } else if (lower === "help") {
+    output.textContent =
+      "Available commands:\n" +
+      "show divisions\n" +
+      "show projects\n" +
+      "sentinel status\n" +
+      "help";
+
+  } else {
+    output.textContent =
+      "Command not recognized by the offline prototype.\n" +
+      "Live AI reasoning requires a separately secured backend.";
+  }
+}
+
+function render() {
+  const divisionList = document.getElementById("divisionList");
+  const approvalList = document.getElementById("approvalList");
+  const projectList = document.getElementById("projectList");
+
+  divisionList.replaceChildren();
+  approvalList.replaceChildren();
+  projectList.replaceChildren();
+
+  for (const d of data.divisions) {
+    divisionList.append(
+      makeItem(
+        d.name + " — " + d.status.toUpperCase(),
+        d.purpose
+      )
+    );
+
+    if (d.status === "pending") {
+      const item = makeItem(d.name, d.purpose);
+
+      item.append(
+        makeButton("Approve", () =>
+          decideDivision(d.id,"active")
+        ),
+        makeButton("Reject", () =>
+          decideDivision(d.id,"rejected")
+        )
+      );
+
+      approvalList.append(item);
+    }
+  }
+
+  for (const p of data.projects) {
+    projectList.append(makeItem(p.name,"Local project"));
+  }
+
+  if (!data.divisions.length) {
+    divisionList.textContent = "No divisions yet.";
+  }
+
+  if (!approvalList.children.length) {
+    approvalList.textContent = "No pending approvals.";
+  }
+
+  if (!data.projects.length) {
+    projectList.textContent = "No projects yet.";
+  }
+}
+
+render();
+</script>
+</body>
+</html>

@@ -11,3 +11,5 @@ Chromium 156 on Linux passed all eight acceptance groups, including rejection of
 ## Phase 1 hardening run
 
 All eight Chromium acceptance groups passed again, including the added fictional bearer-header exclusion, project-identifier retrieval, question search and source excerpt checks. Offline reload and search and clean-profile backup restoration also passed.
+
+The standalone staging endpoint presented the ChatGPT sign-in gate in Cloud Chrome. Signed-out HTTPS probes of the page, JavaScript and service worker each returned 401. Signed-in staging interaction and physical device verification are still pending. The offline cache is device-local by design and remains subject to the independent local vault passphrase.

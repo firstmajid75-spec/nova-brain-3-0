@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self'; connect-src 'self'; worker-src 'self'; base-uri 'none'; form-action 'none'; object-src 'none'">
+<title>ÌLÚNOVA · Memory Archive</title>
+<link rel="stylesheet" href="./styles.css">
+<script type="module" src="./app.js"></script>
+</head>
+<body>
+<header><a class="brand" href="./">ÌLÚNOVA</a><span>Personal Intelligence Archive</span><button id="lock" hidden>Lock archive</button></header>
+<main>
+<section id="gate" class="gate">
+  <h1 id="gate-title">Memory Archive</h1>
+  <p id="gate-help">Checking local storage…</p>
+  <form id="unlock" hidden>
+    <label>Archive passphrase<input type="password" id="password" required></label>
+    <label id="confirm-label" hidden>Repeat passphrase<input type="password" id="confirmation" autocomplete="new-password"></label>
+    <button class="primary" id="unlock-button">Unlock</button>
+  </form>
+</section>
+<p id="status" role="status" aria-live="polite"></p>
+<div id="workspace" hidden>
+  <nav aria-label="Archive">
+    <button data-view="home" aria-current="page">Overview</button>
+    <button data-view="import">Import My Conversations</button>
+    <button data-view="library">My Conversations</button>
+    <button data-view="save">Save New Conversation</button>
+    <button data-view="recovery">Backup &amp; Restore</button>
+  </nav>
+  <section data-panel="home">
+    <h1>Memory Archive</h1>
+    <p id="counts"></p>
+    <p id="storage"></p>
+    <p id="offline"></p>
+    <h2>Recent archive activity</h2><ul id="history"></ul>
+  </section>
+  <section data-panel="import" hidden>
+    <h1>Import My Conversations</h1>
+    <p>Select ChatGPT ZIP or JSON exports, or choose HTML, Markdown or text files. Files are inspected on this device.</p>
+    <label>Conversation files<input id="files" type="file" multiple accept=".zip,.json,.html,.htm,.md,.markdown,.txt"></label>
+    <div id="review"></div>
+  </section>
+  <section data-panel="library" hidden>
+    <h1>My Conversations</h1>
+    <label>Ask My Memory <input type="search" id="query" placeholder="Search titles, messages, categories and notes"></label>
+    <p>Search results open the original conversation. Use keywords to find relevant messages.</p>
+    <div class="library"><div><p id="result-count"></p><ul id="results"></ul><button id="more" hidden>Show more</button></div><article id="detail" hidden></article></div>
+  </section>
+  <section data-panel="save" hidden>
+    <h1>Save New Conversation</h1>
+    <form id="save">
+      <label>Title<input id="title" required maxlength="240"></label>
+      <label>Conversation or selected messages<textarea id="paste" required rows="9"></textarea></label>
+      <button class="primary">Review before saving</button>
+    </form>
+  </section>
+  <section data-panel="recovery" hidden>
+    <h1>Backup &amp; Restore</h1>
+    <p>Keep the encrypted backup and its passphrase somewhere you can find them on a replacement device. A lost passphrase prevents recovery. Deleting an item here leaves any copies in older backups.</p>
+    <form id="backup">
+      <label>New backup passphrase <input id="backup-password" type="password" minlength="12" autocomplete="new-password" required></label>
+      <label>Repeat backup passphrase <input id="backup-confirm" type="password" minlength="12" autocomplete="new-password" required></label>
+      <label class="check"><input id="selected-backup" type="checkbox"> Back up only bookmarked conversations</label>
+      <button class="primary">Download encrypted backup</button>
+    </form>
+    <h2>Restore My Memory</h2>
+    <form id="restore">
+      <label>Encrypted backup<input id="backup-file" type="file" accept=".novabak" required></label>
+      <label>Backup passphrase <input id="restore-password" type="password" autocomplete="off" required></label>
+      <button>Verify and restore</button>
+    </form>
+    <details><summary>Archive settings</summary>
+      <form id="rotate">
+        <label>Current archive passphrase<input id="current-password" type="password" autocomplete="current-password" required></label>
+        <label>New archive passphrase<input id="new-password" type="password" minlength="12" autocomplete="new-password" required></label>
+        <label>Repeat new passphrase<input id="new-confirm" type="password" minlength="12" autocomplete="new-password" required></label>
+        <button>Change archive passphrase</button>
+      </form>
+      <button id="erase" class="danger">Delete entire archive</button>
+    </details>
+  </section>
+  <button id="cancel" hidden>Cancel current operation</button>
+</div>
+</main>
+<footer>Local archive · No account or paid AI required</footer>
+</body>
+</html>

@@ -318,8 +318,15 @@ $('save').onsubmit = event => {
   }, true);
 };
 
+const queryWords = value => value.toLocaleLowerCase().match(/[\p{L}\p{N}]+/gu) ?? [];
+const questionWords = new Set(['about', 'did', 'discuss', 'find', 'for', 'me', 'my', 'our', 'show',
+  'the', 'was', 'we', 'were', 'what', 'where', 'which', 'who']);
+const originalObject = record => record.format === 'json' ? record.original ?? {} : {};
+
 async function search(signal = work?.signal) {
-  const terms = $('query').value.trim().toLocaleLowerCase().split(/\s+/).filter(Boolean);
+  const words = queryWords($('query').value);
+  const keywords = words.filter(word => !questionWords.has(word));
+  const terms = keywords.length ? keywords : words;
   const found = [];
   $('result-count').textContent = 'Searching…';
   $('detail').hidden = true;
@@ -328,9 +335,16 @@ async function search(signal = work?.signal) {
   for (const id of await keys(db, 'records')) {
     signal?.throwIfAborted();
     const record = await getRecord(id);
-    const fields = [record.title, record.note, ...record.categories, ...record.messages.map(message => message.text)];
-    if (terms.every(term => fields.some(field => field.toLocaleLowerCase().includes(term)))) {
-      found.push({ id, title: record.title, bookmark: record.bookmark });
+    const original = originalObject(record);
+    const fields = [record.title, record.note, original.project_id, original.gizmo_id,
+      ...record.categories, ...record.messages.map(message => message.text)]
+      .filter(value => typeof value === 'string').map(value => value.toLocaleLowerCase());
+    if (terms.every(term => fields.some(field => field.includes(term)))) {
+      const excerpt = terms.length ? record.messages.find(message => {
+        const content = message.text.toLocaleLowerCase();
+        return terms.every(term => content.includes(term));
+      })?.text.slice(0, 220) : undefined;
+      found.push({ id, title: record.title, bookmark: record.bookmark, excerpt });
     }
   }
   matches = found.sort((a, b) => Number(b.bookmark) - Number(a.bookmark) || a.title.localeCompare(b.title));
@@ -344,6 +358,7 @@ function renderResults() {
     const button = node('button', (item.bookmark ? '★ ' : '') + item.title);
     button.onclick = () => void run(() => detail(item.id));
     li.append(button);
+    if (item.excerpt) li.append(node('p', item.excerpt));
     $('results').append(li);
   }
   shown += 40;
@@ -363,6 +378,11 @@ async function detail(id) {
   const article = $('detail');
   article.replaceChildren(node('h2', record.title), node('p', 'Source: ' + record.source));
   if (record.sourceId) article.append(node('p', 'Conversation ID: ' + record.sourceId));
+  const originalMetadata = originalObject(record);
+  const project = originalMetadata.project_id ?? originalMetadata.gizmo_id;
+  if (typeof project === 'string') article.append(node('p', 'Source project: ' + project));
+  const created = date(originalMetadata.create_time);
+  if (created) article.append(node('p', 'Conversation created: ' + created));
   const form = node('form');
   const categoryLabel = node('label', 'Categories (comma-separated)');
   const categories = node('input');

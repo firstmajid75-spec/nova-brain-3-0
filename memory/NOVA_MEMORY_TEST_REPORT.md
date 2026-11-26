@@ -7,3 +7,7 @@ Test environment is desktop Chromium with a mobile viewport emulation. Physical 
 ## Recorded run
 
 Chromium 156 on Linux passed all eight acceptance groups, including rejection of wrong passphrases and tampered backups, restoration of three conversations and four messages in a new mobile-sized browser profile, and offline reload and search after service worker activation. The 12 MB ZIP was inspected by streaming records. This establishes functional behavior in the test environment. Physical target devices and an independent review remain pending.
+
+## Phase 1 hardening run
+
+All eight Chromium acceptance groups passed again, including the added fictional bearer-header exclusion, project-identifier retrieval, question search and source excerpt checks. Offline reload and search and clean-profile backup restoration also passed.

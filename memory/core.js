@@ -48,14 +48,16 @@ export async function readBackup(password, file) {
     throw Error('Incorrect backup password or damaged backup.');
   }
   if (!Array.isArray(payload.records)) throw Error('Invalid backup records.');
+  const recordIds = new Set();
   for (const record of payload.records) {
-    if (!record || !/^[a-f0-9]{64}$/.test(record.id) || !/^[a-f0-9]{64}$/.test(record.hash) ||
+    if (!record || recordIds.has(record.id) || !/^[a-f0-9]{64}$/.test(record.id) || !/^[a-f0-9]{64}$/.test(record.hash) ||
         typeof record.title !== 'string' || !Array.isArray(record.messages) ||
         !Array.isArray(record.categories) || record.categories.some(v => typeof v !== 'string') ||
         typeof record.note !== 'string' || typeof record.bookmark !== 'boolean' ||
         record.messages.some(m => !m || typeof m.text !== 'string' || typeof m.role !== 'string')) {
-      throw Error('Invalid conversation in backup.');
+      throw Error('Invalid or duplicate conversation in backup.');
     }
+    recordIds.add(record.id);
   }
   return payload.records;
 }
@@ -108,7 +110,7 @@ export function write(db, operations, signal) {
 const conversationFile = /^conversations?(?:[-_ ]?\d+)?\.json$/i;
 const textFile = /\.(?:html?|md|markdown|txt)$/i;
 const sensitive = [
-  ['Possible credentials', /\b(?:api[-_ ]?key|access[-_ ]?token|password|authorization:\s*bearer)\s*[:=]|-----BEGIN [A-Z ]*PRIVATE KEY-----/i],
+  ['Possible credentials', /\b(?:api[-_ ]?key|access[-_ ]?token|password)\s*[:=]|\bauthorization\s*:\s*bearer\s+\S+|-----BEGIN (?:[A-Z0-9]+ )*PRIVATE KEY-----/i],
   ['Health', /\b(?:medical|diagnosis|patient|prescription)\b/i],
   ['Family', /\b(?:family|child|relationship)\b/i],
   ['Financial', /\b(?:bank|account number|salary|credit card)\b/i],
@@ -173,6 +175,7 @@ async function* jsonObjects(stream, signal) {
             offset = -1;
             state = mode === 'array' ? 'separator' : 'end';
             yield parsed;
+            signal.throwIfAborted();
           }
           continue;
         }

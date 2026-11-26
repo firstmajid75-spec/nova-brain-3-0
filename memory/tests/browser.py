@@ -13,6 +13,7 @@ BACKUP = "fictional backup passphrase"
 CONVERSATION = {
     "id": "imaginary-001",
     "title": "Fictional engineering notes",
+    "project_id": "fictional-observatory",
     "mapping": {
         "root": {"children": ["alternate"], "message": {
             "author": {"role": "user"}, "create_time": 1700000000,
@@ -105,7 +106,9 @@ with sync_playwright() as playwright, tempfile.TemporaryDirectory() as tmp:
     expect(page.locator("#review")).to_contain_text("1 conflicts")
     upload(page, "secret.txt", b"api_key = fictional-secret")
     expect(page.locator("#review")).to_contain_text("1 excluded for possible credentials")
-    print("PASS numbered ZIP import, metadata exclusion, duplicates, conflicts and credential flag", flush=True)
+    upload(page, "header.txt", b"Authorization: Bearer fictional-example")
+    expect(page.locator("#review")).to_contain_text("1 excluded for possible credentials")
+    print("PASS numbered ZIP import, metadata exclusion, duplicates, conflicts and credential flags", flush=True)
 
     upload(page, "unsafe.html", b'<img src="https://invalid.example/"> Fictional HTML')
     page.get_by_role("button", name="Import selected (1)").click()
@@ -121,8 +124,12 @@ with sync_playwright() as playwright, tempfile.TemporaryDirectory() as tmp:
     page.get_by_role("button", name="unsafe.html").click()
     expect(page.locator("#detail pre")).to_contain_text("<img src=")
     assert page.locator("#detail img").count() == 0
-    page.locator("#query").fill("bronze turbine")
+    page.locator("#query").fill("fictional observatory")
+    expect(page.locator("#result-count")).to_have_text("1 conversations found.")
+    page.locator("#query").fill("What did we discuss about the bronze turbine?")
+    expect(page.locator("#results")).to_contain_text("Find the fictional bronze turbine.")
     page.get_by_role("button", name=CONVERSATION["title"]).click()
+    expect(page.locator("#detail")).to_contain_text("Source project: fictional-observatory")
     expect(page.locator("#detail")).to_contain_text("Parent root")
     expect(page.locator("#detail")).to_contain_text("2023")
     expect(page.locator("#detail")).to_contain_text("Alternate branch.")
